@@ -1,0 +1,93 @@
+int gridSize = 65;  // Tamaño de cada cuadrado en la cuadrícula
+int numSquares = 6;  // Número de cuadrados en cada fila y columna
+int circleSize = 20; // Tamaño de los círculos en las intersecciones
+
+PImage imagen1;
+
+
+void setup() {
+  size(800, 400);
+  background(0);
+  drawGrid();
+  imagen1 = loadImage("/libraries/Grid_illusion.svg.png");
+}
+
+void draw() {
+  // No hay necesidad de redibujar la cuadrícula constantemente
+}
+
+// Función propia con parámetros que no retorna un valor
+void drawGrid() {
+  stroke(255); // Color de las líneas de la cuadrícula (blanco)
+  strokeWeight(10); // Grosor de las líneas de la cuadrícula
+  
+  for (int i = 0; i <= numSquares; i++) {
+    // Dibujar líneas horizontales
+    line(0, i * gridSize, numSquares * gridSize, i * gridSize);
+    // Dibujar líneas verticales
+    line(i * gridSize, 0, i * gridSize, numSquares * gridSize);
+  }
+  
+  for (int i = 0; i <= numSquares; i++) {
+    for (int j = 0; j <= numSquares; j++) {
+      // Dibujar círculos en las intersecciones
+      fill(255); // Color de los círculos (blanco)
+      noStroke();
+      ellipse(i * gridSize, j * gridSize, circleSize, circleSize);
+    }
+  }
+}
+
+// Función propia con parámetros que retorna un valor
+boolean isMouseOverCircle(float x, float y, float circleX, float circleY, float circleSize) {
+  float d = dist(x, y, circleX, circleY);
+  return d < circleSize / 2;
+}
+
+
+
+void mousePressed() {
+  for (int i = 0; i <= numSquares; i++) {
+    for (int j = 0; j <= numSquares; j++) {
+      float circleX = i * gridSize;
+      float circleY = j * gridSize;
+      
+      if (isMouseOverCircle(mouseX, mouseY, circleX, circleY, circleSize)) {
+        background(0);  // Reiniciar fondo
+        changeCircleSize();  // Cambiar tamaño de los círculos
+        drawGrid();  // Redibujar cuadrícula con nuevos tamaños
+      }
+    }
+  }
+}
+
+void keyPressed() {
+  if (key == 'r' || key == 'R') {
+    resetGrid();
+  }
+}
+
+// Función para cambiar el tamaño de los círculos aleatoriamente
+void changeCircleSize() {
+  circleSize = (int) random(10, 30);  // Cambiar tamaño de los círculos a un valor aleatorio entre 10 y 30
+}
+
+
+
+// Función para reiniciar la cuadrícula a su estado original
+void resetGrid() {
+  gridSize = 100;
+  numSquares = 6;
+  circleSize = 20;
+  
+  background(0);
+  drawGrid();
+  
+}
+
+
+void imagenCargada(){
+    push();
+    image(imagen1, 0, 0);
+    pop();
+}
